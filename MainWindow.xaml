@@ -1,0 +1,91 @@
+﻿<Window x:Class="RecipeManagerWPF1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RecipeManagerWPF1"
+        mc:Ignorable="d"
+        
+           Title="Recipe Manager" Height="600" Width="800">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Recipe Details Input Section -->
+        <GroupBox Header="Add Recipe" Grid.Row="0">
+            <StackPanel Margin="10">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Width="80" Text="Recipe Name:" VerticalAlignment="Center"/>
+                    <TextBox x:Name="txtRecipeName" Width="200" Margin="5" VerticalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Width="80" Text="Ingredient Name:" VerticalAlignment="Center"/>
+                    <TextBox x:Name="txtIngredientName" Width="200" Margin="5" VerticalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Width="80" Text="Quantity:" VerticalAlignment="Center"/>
+                    <TextBox x:Name="txtQuantity" Width="80" Margin="5" VerticalAlignment="Center"/>
+                    <TextBlock Text="Unit:" VerticalAlignment="Center"/>
+                    <ComboBox x:Name="cmbUnit" Width="100" Margin="5" VerticalAlignment="Center">
+                        <ComboBoxItem Content="kg"/>
+                        <ComboBoxItem Content="g"/>
+                        <ComboBoxItem Content="L"/>
+                        <ComboBoxItem Content="ml"/>
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Width="80" Text="Calories:" VerticalAlignment="Center"/>
+                    <TextBox x:Name="txtCalories" Width="80" Margin="5" VerticalAlignment="Center"/>
+                    <TextBlock Text="Food Group:" VerticalAlignment="Center"/>
+                    <ComboBox x:Name="cmbFoodGroup" Width="100" Margin="5" VerticalAlignment="Center">
+                        <ComboBoxItem Content="Vegetables"/>
+                        <ComboBoxItem Content="Fruits"/>
+                        <ComboBoxItem Content="Grains"/>
+                        <ComboBoxItem Content="Protein"/>
+                        <ComboBoxItem Content="Dairy"/>
+                    </ComboBox>
+                </StackPanel>
+                <Button Content="Add Recipe" Width="100" Margin="5" Click="AddRecipe_Click"/>
+            </StackPanel>
+        </GroupBox>
+
+        <!-- Filter Section -->
+        <GroupBox Header="Filter Recipes" Grid.Row="1" Margin="10">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Ingredient Name:" VerticalAlignment="Center" Margin="5"/>
+                <TextBox x:Name="txtFilterIngredient" Width="150" Margin="5" VerticalAlignment="Center"/>
+                <TextBlock Text="Food Group:" VerticalAlignment="Center" Margin="5"/>
+                <ComboBox x:Name="cmbFilterFoodGroup" Width="150" Margin="5" VerticalAlignment="Center">
+                    <ComboBoxItem Content="Vegetables"/>
+                    <ComboBoxItem Content="Fruits"/>
+                    <ComboBoxItem Content="Grains"/>
+                    <ComboBoxItem Content="Protein"/>
+                    <ComboBoxItem Content="Dairy"/>
+                </ComboBox>
+                <TextBlock Text="Max Calories:" VerticalAlignment="Center" Margin="5"/>
+                <TextBox x:Name="txtFilterCalories" Width="80" Margin="5" VerticalAlignment="Center"/>
+                <Button Content="Filter" Width="100" Margin="5" Click="FilterRecipes_Click"/>
+            </StackPanel>
+        </GroupBox>
+
+        <!-- Recipe List Section -->
+        <ListBox x:Name="lstRecipes" Grid.Row="2" Margin="10" DisplayMemberPath="Name" SelectionChanged="lstRecipes_SelectionChanged"/>
+
+        <!-- Recipe Details Section -->
+        <GroupBox Header="Recipe Details" Grid.Row="3">
+            <StackPanel Margin="10">
+                <TextBlock Text="Selected Recipe:" FontWeight="Bold" Margin="0 0 0 5"/>
+                <TextBlock x:Name="txtSelectedRecipe" TextWrapping="Wrap"/>
+            </StackPanel>
+        </GroupBox>
+
+        <!-- Clear Data Section -->
+        <Button Content="Clear All Data" Grid.Row="4" Width="100" Margin="10" Click="ClearAllData_Click"/>
+    </Grid>
+</Window>
+
