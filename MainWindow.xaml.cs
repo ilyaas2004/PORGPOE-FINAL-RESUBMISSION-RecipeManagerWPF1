@@ -31,29 +31,49 @@ namespace RecipeManagerWPF1
 
         private void AddRecipe_Click(object sender, RoutedEventArgs e)
         {
-            // Collect data from the input fields
-            string recipeName = txtRecipeName.Text;
-            string ingredientName = txtIngredientName.Text;
-            decimal quantity;
-            decimal.TryParse(txtQuantity.Text, out quantity);
-            string unit = cmbUnit.Text;
-            int calories;
-            int.TryParse(txtCalories.Text, out calories);
-            string foodGroup = cmbFoodGroup.Text;
+            try
+            {
+                // Collect data from the input fields
+                string recipeName = txtRecipeName.Text;
+                string ingredientName = txtIngredientName.Text;
+                if (!decimal.TryParse(txtQuantity.Text, out decimal quantity))
+                {
+                    MessageBox.Show("Please enter a valid quantity.");
+                    return;
+                }
+                string unit = cmbUnit.Text;
+                if (!int.TryParse(txtCalories.Text, out int calories))
+                {
+                    MessageBox.Show("Please enter a valid calorie amount.");
+                    return;
+                }
+                string foodGroup = cmbFoodGroup.Text;
 
-            // Add the recipe
-            _recipeManager.AddRecipe(recipeName, ingredientName, quantity, unit, calories, foodGroup);
+                // Add the recipe
+                _recipeManager.AddRecipe(recipeName, ingredientName, quantity, unit, calories, foodGroup);
 
-            // Clear input fields after adding the recipe
-            txtRecipeName.Text = string.Empty;
-            txtIngredientName.Text = string.Empty;
-            txtQuantity.Text = string.Empty;
-            cmbUnit.SelectedIndex = -1;
-            txtCalories.Text = string.Empty;
-            cmbFoodGroup.SelectedIndex = -1;
+                // Check if the total calories of the new recipe exceed 300
+                var addedRecipe = _recipeManager.GetRecipes().FirstOrDefault(r => r.Name == recipeName);
+                if (addedRecipe != null && addedRecipe.CalculateTotalCalories() > 300)
+                {
+                    MessageBox.Show("The total calories of this recipe exceed 300!");
+                }
 
-            // Refresh the recipe list
-            RefreshRecipeList();
+                // Clear input fields after adding the recipe
+                txtRecipeName.Text = string.Empty;
+                txtIngredientName.Text = string.Empty;
+                txtQuantity.Text = string.Empty;
+                cmbUnit.SelectedIndex = -1;
+                txtCalories.Text = string.Empty;
+                cmbFoodGroup.SelectedIndex = -1;
+
+                // Refresh the recipe list
+                RefreshRecipeList();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}");
+            }
         }
 
         private void ClearAllData_Click(object sender, RoutedEventArgs e)
@@ -77,12 +97,15 @@ namespace RecipeManagerWPF1
             lstRecipes.ItemsSource = filteredRecipes;
         }
 
-        private void lstRecipes_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void lstRecipes_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (lstRecipes.SelectedItem != null)
             {
                 var selectedRecipe = lstRecipes.SelectedItem as Recipe;
-                txtSelectedRecipe.Text = selectedRecipe?.DisplayRecipe();
+                if (selectedRecipe != null)
+                {
+                    txtSelectedRecipe.Text = selectedRecipe.DisplayRecipe();
+                }
             }
         }
 
@@ -91,6 +114,37 @@ namespace RecipeManagerWPF1
             lstRecipes.ItemsSource = null;
             lstRecipes.ItemsSource = _recipeManager.GetRecipes();
         }
+
+        private void ScaleRecipe_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (lstRecipes.SelectedItem != null)
+                {
+                    var selectedRecipe = lstRecipes.SelectedItem as Recipe;
+                    if (selectedRecipe != null)
+                    {
+                        if (decimal.TryParse(txtScaleFactor.Text, out decimal scaleFactor) && scaleFactor > 0)
+                        {
+                            selectedRecipe.ScaleRecipe(scaleFactor);
+                            txtSelectedRecipe.Text = selectedRecipe.DisplayRecipe();
+                            RefreshRecipeList(); // Optionally refresh the list to reflect changes
+                        }
+                        else
+                        {
+                            MessageBox.Show("Please enter a valid scaling factor greater than 0.");
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Please select a recipe to scale.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }
-

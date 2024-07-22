@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RecipeManagerWPF1
 {
-    public class Recipe
+       public class Recipe
     {
         public string Name { get; set; }
         public List<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
@@ -32,7 +32,6 @@ namespace RecipeManagerWPF1
 
             return recipeDetails.ToString();
         }
-
         public void ScaleRecipe(decimal scaleFactor)
         {
             foreach (var ingredient in Ingredients)
